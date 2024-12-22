@@ -37,5 +37,5 @@ variable "staging_instance_type" {
 
 # Default values for Production
 variable "production_instance_type" {
-  default = "t3.medium"
+  default = "t2.micro"
 }
