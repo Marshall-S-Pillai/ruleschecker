@@ -1,4 +1,4 @@
-name: Terraform Destroy and Remove EC2 with Workspaces
+name: Terraform Destroy and Provision EC2 with Workspaces
 
 on:
   workflow_dispatch:
@@ -26,7 +26,8 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: "1.4.0"
-      
+
+      # Set the AWS region based on the selected environment
       - name: Set AWS region
         id: set-region
         run: |
@@ -35,14 +36,14 @@ jobs:
           else
             echo "AWS_REGION=${{ secrets.AWS_REGION_STAGING }}" >> $GITHUB_ENV
           fi
-      
+
       # Configure AWS credentials from GitHub Secrets
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ github.event.inputs.environment == 'production' && secrets.AWS_REGION_PRODUCTION || secrets.AWS_REGION_STAGING }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       # Initialize Terraform
       - name: Terraform Init
@@ -57,10 +58,10 @@ jobs:
             terraform workspace select staging || terraform workspace new staging
           fi
 
-      # Destroy Terraform plan
+      # Terraform Destroy
       - name: Terraform Destroy
-        run: terraform destroy -var-file="envs/${{ github.event.inputs.environment }}.tfvars" -auto-approve
+        run: terraform destroy -var-file="${{ github.event.inputs.environment }}.tfvars" -auto-approve
 
-      # Output status after destroy
-      - name: Output Terraform Destroy Status
-        run: echo "Terraform resources for ${{ github.event.inputs.environment }} have been destroyed."
+      # Output the confirmation of destruction
+      - name: Output Destroy Confirmation
+        run: echo "Terraform resources have been destroyed for the ${{ github.event.inputs.environment }} environment."
