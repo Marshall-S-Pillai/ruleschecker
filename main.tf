@@ -4,6 +4,15 @@
 provider "aws" {
   region = var.aws_region
 }
+resource "aws_key_pair" "web_key_pair" {
+  key_name   = "my-ec2-keypair"  # Name of the key pair
+  public_key = file("~/.ssh/id_rsa.pub")  # Path to your public key file
+  
+  tags = {
+    Name = "WebServer-KeyPair"
+  }
+}
+
 
 # EC2 Instance resource
 resource "aws_instance" "web" {
