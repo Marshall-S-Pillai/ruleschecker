@@ -9,6 +9,11 @@ variable "instance_type" {
   type        = string
 }
 
+variable "key_name" {
+  description = "The name of the EC2 Key Pair"
+  type        = string
+}
+
 variable "ami_id" {
   description = "AMI ID for EC2 instance"
   type        = string
