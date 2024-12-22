@@ -26,7 +26,16 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: "1.4.0"
-
+      
+      - name: Set AWS region
+        id: set-region
+        run: |
+          if [ "${{ github.event.inputs.environment }}" == "production" ]; then
+            echo "AWS_REGION=${{ secrets.AWS_REGION_PRODUCTION }}" >> $GITHUB_ENV
+          else
+            echo "AWS_REGION=${{ secrets.AWS_REGION_STAGING }}" >> $GITHUB_ENV
+          fi
+      
       # Configure AWS credentials from GitHub Secrets
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
