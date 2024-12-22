@@ -60,7 +60,7 @@ jobs:
 
       # Apply Terraform plan
       - name: Terraform Apply
-        run: terraform apply -var-file="envs/${{ github.event.inputs.environment }}.tfvars" -auto-approve
+        run: terraform apply -var-file="${{ github.event.inputs.environment }}.tfvars" -auto-approve
 
       # Output the public IP of the EC2 instance
       - name: Output EC2 IP
