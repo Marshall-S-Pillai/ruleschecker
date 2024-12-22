@@ -24,7 +24,7 @@ variable "environment" {
   type        = string
 }
 
-variable "db_password" {
+variable "db_schema" {
   description = "Database password for the environment"
   type        = string
   sensitive   = true
@@ -37,5 +37,5 @@ variable "staging_instance_type" {
 
 # Default values for Production
 variable "production_instance_type" {
-  default = "t2.micro"
+  default = "t2.medium"
 }
